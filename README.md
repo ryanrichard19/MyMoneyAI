@@ -76,3 +76,8 @@ Contributions are welcome! Please```
 ## License
 
 *Include licensing information, if applicable*
+
+
+dotnet ef migrations add InitialCreate --project MyMoneyAI.Infrastructure --startup-project MyMoneyAI.API
+
+dotnet ef database update --project MyMoneyAI.Infrastructure --startup-project MyMoneyAI.API
