@@ -19,11 +19,11 @@ jobs:
         dotnet-version: '7.0.x' 
 
     - name: Restore dependencies
-      run: dotnet restore MyMoneyAIAPI/MyMoneyAI.sln
+      run: dotnet restore MyMoneyAIAPI/MyMoneyAIAPI.sln
 
     - name: Build
-      run: dotnet build MyMoneyAIAPI/MyMoneyAI.sln --no-restore --configuration Release
+      run: dotnet build MyMoneyAIAPI/MyMoneyAIAPI.sln --no-restore --configuration Release
 
     - name: Test
-      run: dotnet test MyMoneyAIAPI/MyMoneyAI.sln --no-build --configuration Release --verbosity normal
+      run: dotnet test MyMoneyAIAPI/MyMoneyAIAPI.sln --no-build --configuration Release --verbosity normal
 
