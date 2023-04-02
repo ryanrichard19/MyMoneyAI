@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyMoneyAI.Application.DTOs;
 using MyMoneyAI.Application.Interfaces;
 using MyMoneyAI.Domain.Entities;
 
@@ -29,7 +30,7 @@ namespace MyMoneyAI.API.Controllers
                 return BadRequest("Registration failed.");
             }
 
-            return Ok(new { UserId = user.Id, UserName = user.UserName });
+            return Ok(new RegisterResponse { UserId = user.Id, UserName = user.UserName });
         }
 
         [HttpPost("login")]
@@ -43,7 +44,7 @@ namespace MyMoneyAI.API.Controllers
             }
 
             var token = _tokenService.GenerateToken(user);
-            return Ok(new { UserId = user.Id, UserName = user.UserName, Token = token });
+            return Ok(new LoginResponseDto { UserId = user.Id, UserName = user.UserName, Token = token });
         }
     }
 }

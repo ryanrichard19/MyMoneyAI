@@ -8,7 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyMoneyAI.Tests
+namespace MyMoneyAI.Tests.Services
 {
     public class TokenServiceTests
     {
