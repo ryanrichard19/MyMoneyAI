@@ -18,9 +18,19 @@ namespace MyMoneyAI.Infrastructure.Repositories
             _userManager = userManager;
         }
 
+        public async Task<bool> CheckPasswordAsync(User user, string password)
+        {
+            return await _userManager.CheckPasswordAsync(user, password);
+        }
+
         public async Task<User> GetUserByIdAsync(string userId)
         {
             return await _userManager.FindByIdAsync(userId);
+        }
+
+        public async Task<User> GetUserByUsernameAsync(string username)
+        {
+            return await _userManager.FindByNameAsync(username);
         }
 
         public async Task<User> RegisterUserAsync(User user, string password)
