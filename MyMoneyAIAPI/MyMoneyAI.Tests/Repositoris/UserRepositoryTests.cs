@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyMoneyAI.Tests
+namespace MyMoneyAI.Tests.Repositoris
 {
     public class UserRepositoryTests
     {
@@ -118,6 +118,6 @@ namespace MyMoneyAI.Tests
             Assert.Equal(testUser.UserName, user.UserName);
             _userManagerMock.Verify(um => um.FindByIdAsync(testUser.Id), Times.Once);
         }
-   
+
     }
 }
