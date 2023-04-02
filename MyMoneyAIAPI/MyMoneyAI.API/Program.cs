@@ -7,6 +7,7 @@ using MyMoneyAI.Application.Interfaces;
 using MyMoneyAI.Application.Services;
 using MyMoneyAI.Domain.Entities;
 using MyMoneyAI.Infrastructure.Data;
+using MyMoneyAI.Infrastructure.Repositories;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,7 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Configure JWT authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
