@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyMoneyAI.Tests.Repositoris
+namespace MyMoneyAI.Tests.Repositories
 {
     public class UserRepositoryTests
     {
