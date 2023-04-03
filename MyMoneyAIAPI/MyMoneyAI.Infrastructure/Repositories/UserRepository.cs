@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MyMoneyAI.Application.Interfaces;
 using MyMoneyAI.Domain.Entities;
+using MyMoneyAI.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyMoneyAI.Application.Interfaces;
 using MyMoneyAI.Domain.Entities;
+using MyMoneyAI.Domain.Interfaces;
 using MyMoneyAI.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
@@ -35,16 +36,16 @@ namespace MyMoneyAI.Infrastructure.Repositories
             return await _context.Accounts.FindAsync(id);
         }
 
-        public void Update(Account account)
+        public async Task Update(Account account)
         {
             _context.Accounts.Update(account);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Remove(Account account)
+        public async Task Remove(Account account)
         {
             _context.Accounts.Remove(account);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
     }

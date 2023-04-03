@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyMoneyAI.Application.Interfaces
+namespace MyMoneyAI.Domain.Interfaces
 {
     public interface ITransactionRepository
     {
         Task<IEnumerable<Transaction>> ListAsync();
         Task AddAsync(Transaction transaction);
         Task<Transaction> FindByIdAsync(int id);
-        void Update(Transaction transaction);
-        void Remove(Transaction transaction);
+        Task Update(Transaction transaction);
+        Task Remove(Transaction transaction);
     }
 }

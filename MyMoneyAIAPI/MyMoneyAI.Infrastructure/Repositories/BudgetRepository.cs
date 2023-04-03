@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyMoneyAI.Domain.Entities;
+using MyMoneyAI.Domain.Interfaces;
 using MyMoneyAI.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MyMoneyAI.Infrastructure.Repositories
 {
-    public class BudgetRepository
+    public class BudgetRepository: IBudgetRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -34,16 +35,16 @@ namespace MyMoneyAI.Infrastructure.Repositories
             return await _context.Budgets.FindAsync(id);
         }
 
-        public void Update(Budget budget)
+        public async Task Update(Budget budget)
         {
             _context.Budgets.Update(budget);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Remove(Budget budget)
+        public async Task Remove(Budget budget)
         {
             _context.Budgets.Remove(budget);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }
