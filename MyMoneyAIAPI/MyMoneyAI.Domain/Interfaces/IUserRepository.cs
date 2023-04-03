@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyMoneyAI.Application.Interfaces
+namespace MyMoneyAI.Domain.Interfaces
 {
     public interface IUserRepository
     {

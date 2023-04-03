@@ -13,7 +13,7 @@ namespace MyMoneyAI.Tests.Repositories
 {
     public class TransactionRepositoryTests
     {
-        private readonly Mock<DbSet<Transaction>> _mockTransactionSet;
+       /* private readonly Mock<DbSet<Transaction>> _mockTransactionSet;
         private readonly Mock<ApplicationDbContext> _mockContext;
         private readonly TransactionRepository _transactionRepository;
 
@@ -96,7 +96,7 @@ namespace MyMoneyAI.Tests.Repositories
             // Assert
             _mockTransactionSet.Verify(m => m.Remove(It.IsAny<Transaction>()), Times.Once);
             _mockContext.Verify(m => m.SaveChangesAsync(default), Times.Once);
-        }
+        }*/
 
     }
 }

@@ -2,6 +2,7 @@
 using Moq;
 using MyMoneyAI.Application.Interfaces;
 using MyMoneyAI.Domain.Entities;
+using MyMoneyAI.Domain.Interfaces;
 using MyMoneyAI.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;

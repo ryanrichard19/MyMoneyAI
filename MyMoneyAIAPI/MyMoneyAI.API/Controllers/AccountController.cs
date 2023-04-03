@@ -2,6 +2,7 @@
 using MyMoneyAI.Application.DTOs;
 using MyMoneyAI.Application.Interfaces;
 using MyMoneyAI.Domain.Entities;
+using MyMoneyAI.Domain.Interfaces;
 
 namespace MyMoneyAI.API.Controllers
 {
