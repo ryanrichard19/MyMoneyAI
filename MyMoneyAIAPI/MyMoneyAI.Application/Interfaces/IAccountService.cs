@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace MyMoneyAI.Application.Interfaces
 {
-    public interface IAccountService
+    public interface IAccountService : IBaseService<Account>
     {
-        Task<IEnumerable<Account>> ListAsync();
-        Task<Account> GetByIdAsync(int accountId);
-        Task AddAsync(Account account);
-        Task UpdateAsync(Account account);
-        Task RemoveAsync(int accountId);
+      
     }
 }
