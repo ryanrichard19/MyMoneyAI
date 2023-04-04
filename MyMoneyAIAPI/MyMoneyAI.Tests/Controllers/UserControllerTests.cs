@@ -13,17 +13,17 @@ using System.Threading.Tasks;
 
 namespace MyMoneyAI.Tests.Controllers
 {
-    public class AccountControllerTests
+    public class UserControllerTests
     {
         private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly Mock<ITokenService> _tokenServiceMock;
-        private readonly AccountController _controller;
+        private readonly UserController _controller;
 
-        public AccountControllerTests()
+        public UserControllerTests()
         {
             _userRepositoryMock = new Mock<IUserRepository>();
             _tokenServiceMock = new Mock<ITokenService>();
-            _controller = new AccountController(_userRepositoryMock.Object, _tokenServiceMock.Object);
+            _controller = new UserController(_userRepositoryMock.Object, _tokenServiceMock.Object);
         }
 
         [Fact]

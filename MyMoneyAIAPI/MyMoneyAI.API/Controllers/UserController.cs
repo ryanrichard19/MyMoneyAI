@@ -6,17 +6,22 @@ using Microsoft.AspNetCore.Identity;
 using MyMoneyAI.API.Models;
 using MyMoneyAI.Application.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MyMoneyAI.Domain.Interfaces;
+using MyMoneyAI.Application.DTOs;
 
 namespace MyMoneyAI.API.Controllers
 {
+
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
+        private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
 
-        public UserController(ITokenService tokenService)
+        public UserController(IUserRepository userRepository, ITokenService tokenService)
         {
+            _userRepository = userRepository;
             _tokenService = tokenService;
         }
 
@@ -26,23 +31,34 @@ namespace MyMoneyAI.API.Controllers
         {
             return Ok("Authentication works!");
         }
+       
 
-        [AllowAnonymous]
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterUserDto registerUserDto)
         {
-            // This is just a temporary user for testing purposes
-            var user = new User { UserName = "TestUser", Email = "test@example.com" };
-            var password = "Test123!";
+            var newUser = new User { UserName = registerUserDto.Username, Email = registerUserDto.Email };
+            var user = await _userRepository.RegisterUserAsync(newUser, registerUserDto.Password);
 
-            // Check the user's credentials (replace this with proper authentication later)
-            if (request.Username == user.UserName && request.Password == password)
+            if (user == null)
             {
-                var token = _tokenService.GenerateToken(user);
-                return Ok(new { token });
+                return BadRequest("Registration failed.");
             }
 
-            return Unauthorized();
+            return Ok(new RegisterResponse { UserId = user.Id, UserName = user.UserName });
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginUserDto loginUserDto)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(loginUserDto.Username);
+
+            if (user == null || !await _userRepository.CheckPasswordAsync(user, loginUserDto.Password))
+            {
+                return Unauthorized("Invalid username or password.");
+            }
+
+            var token = _tokenService.GenerateToken(user);
+            return Ok(new LoginResponseDto { UserId = user.Id, UserName = user.UserName, Token = token });
         }
     }
 }
