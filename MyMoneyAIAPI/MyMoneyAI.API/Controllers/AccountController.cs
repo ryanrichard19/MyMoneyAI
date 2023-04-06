@@ -24,40 +24,40 @@ namespace MyMoneyAI.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAccounts()
         {
-            var accounts = await _accountService.ListAsync();
-            return Ok(accounts);
+            var accountsDtoList = await _accountService.ListAsync();
+            return Ok(accountsDtoList);
         }
 
         // GET: api/accounts/{id}
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTransactionById(int id)
+        public async Task<IActionResult> GetAccountById(int id)
         {
-            var account = await _accountService.FindByIdAsync(id);
-            if (account == null)
+            var accountDto = await _accountService.FindByIdAsync(id);
+            if (accountDto == null)
             {
                 return NotFound();
             }
-            return Ok(account);
+            return Ok(accountDto);
         }
 
         // POST: api/accounts
         [HttpPost]
-        public async Task<IActionResult> CreateAccount([FromBody] AccountDto account)
+        public async Task<IActionResult> CreateAccount([FromBody] AccountDto accountDto)
         {
-            await _accountService.AddAsync(account);
-            return CreatedAtAction(nameof(GetTransactionById), new { id = account.Id }, account);
+            var newAccountDto = await _accountService.AddAsync(accountDto);
+            return CreatedAtAction(nameof(GetAccountById), new { id = newAccountDto.Id }, newAccountDto);
         }
 
         // PUT: api/accounts/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountDto updatedAccount)
+        public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountDto updatedAccountDto)
         {
-            if (id != updatedAccount.Id)
+            if (id != updatedAccountDto.Id)
             {
                 return BadRequest();
             }
 
-            await _accountService.UpdateAsync(updatedAccount);
+            await _accountService.UpdateAsync(updatedAccountDto);
             return NoContent();
         }
 
