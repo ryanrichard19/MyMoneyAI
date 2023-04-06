@@ -1,4 +1,6 @@
-﻿using MyMoneyAI.Application.Interfaces;
+﻿using AutoMapper;
+using MyMoneyAI.Application.DTOs;
+using MyMoneyAI.Application.Interfaces;
 using MyMoneyAI.Domain.Entities;
 using MyMoneyAI.Domain.Interfaces;
 using System;
@@ -9,12 +11,13 @@ using System.Threading.Tasks;
 
 namespace MyMoneyAI.Application.Services
 {
-    public class AccountService: BaseService<Account>, IAccountService
+    public class AccountService: BaseService<Account, AccountDto>, IAccountService
     {
         private readonly IAccountRepository _accountRepository;
 
-        public AccountService(IGenericRepository<Account> repository, IUserContext userContext, IAccountRepository accountRepository)
-         : base(repository, userContext)
+        public AccountService(IGenericRepository<Account> repository, 
+            IUserContext userContext, IAccountRepository accountRepository, IMapper mapper)
+         : base(repository, userContext, mapper)
         {
             _accountRepository = accountRepository;
         }
