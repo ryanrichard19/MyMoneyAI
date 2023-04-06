@@ -3,6 +3,7 @@ using MyMoneyAI.Application.Interfaces;
 using MyMoneyAI.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MyMoneyAI.Application.DTOs;
 
 namespace MyMoneyAI.API.Controllers
 {
@@ -39,22 +40,22 @@ namespace MyMoneyAI.API.Controllers
 
         // POST: api/transactions
         [HttpPost]
-        public async Task<IActionResult> CreateTransaction([FromBody] Transaction transaction)
+        public async Task<IActionResult> CreateTransaction([FromBody] TransactionDto transactionDto)
         {
-            await _transactionService.AddAsync(transaction);
-            return CreatedAtAction(nameof(GetTransactionById), new { id = transaction.Id }, transaction);
+            var newTransactionDto = await _transactionService.AddAsync(transactionDto);
+            return CreatedAtAction(nameof(GetTransactionById), new { id = newTransactionDto.Id }, newTransactionDto);
         }
 
         // PUT: api/transactions/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTransaction(int id, [FromBody] Transaction updatedTransaction)
+        public async Task<IActionResult> UpdateTransaction(int id, [FromBody] TransactionDto updatedTransactionDto)
         {
-            if (id != updatedTransaction.Id)
+            if (id != updatedTransactionDto.Id)
             {
                 return BadRequest();
             }
 
-            await _transactionService.UpdateAsync(updatedTransaction);
+            await _transactionService.UpdateAsync(updatedTransactionDto);
             return NoContent();
         }
 

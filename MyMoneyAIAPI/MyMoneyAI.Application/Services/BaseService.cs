@@ -1,4 +1,6 @@
-﻿using MyMoneyAI.Application.Interfaces;
+﻿using AutoMapper;
+using MyMoneyAI.Application.DTOs;
+using MyMoneyAI.Application.Interfaces;
 using MyMoneyAI.Domain.Entities;
 using MyMoneyAI.Domain.Interfaces;
 using System;
@@ -11,54 +13,52 @@ using X.PagedList;
 
 namespace MyMoneyAI.Application.Services
 {
-    public class BaseService<TEntity> : IBaseService<TEntity> where TEntity : BaseEntity
+    public class BaseService<TEntity, TDto> : IBaseService<TEntity, TDto> 
+        where TEntity : BaseEntity
+        where TDto : BaseDto
     {
         private readonly IGenericRepository<TEntity> _repository;
         private readonly IUserContext _userContext;
+        protected readonly IMapper _mapper;
 
-        public BaseService(IGenericRepository<TEntity> repository, IUserContext userContext)
+        public BaseService(IGenericRepository<TEntity> repository, IUserContext userContext, IMapper mapper)
         {
             _repository = repository;
             _userContext = userContext;
+            _mapper = mapper;
         }
 
-        public async Task<TEntity> AddAsync(TEntity entity)
+        public async Task<TDto> AddAsync(TDto dto)
         {
+            TEntity entity = _mapper.Map<TEntity>(dto);
             entity.OwnerId = _userContext.UserId;
-            return await _repository.AddAsync(entity);
+            var newEntity = await _repository.AddAsync(entity);
+            return _mapper.Map<TDto>(newEntity);
         }
 
 
-        public async Task<TEntity> FindByIdAsync(int id)
+        public async Task<TDto> FindByIdAsync(int id)
         {
-            return await _repository.FindByIdAsync(e => e.Id == id && e.OwnerId == _userContext.UserId);
+            var entity =  await _repository.FindByIdAsync(e => e.Id == id && e.OwnerId == _userContext.UserId);
+            return _mapper.Map<TDto>(entity);
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity entity)
+        public async Task<TDto> UpdateAsync(TDto dto)
         {
-            var existingEntity = await FindByIdAsync(entity.Id);
-
-            if (existingEntity == null)
-            {
-                throw new InvalidOperationException("Entity not found or user not authorized to update.");
-            }
-
-            return await _repository.UpdateAsync(entity);
+            _ = await FindByIdAsync(dto.Id) ?? throw new InvalidOperationException("Entity not found or user not authorized to update.");
+            TEntity entity = _mapper.Map<TEntity>(dto);
+            var updatedEntity = await _repository.UpdateAsync(entity);
+            return _mapper.Map<TDto>(updatedEntity);
         }
 
         public async Task RemoveAsync(int id)
         {
-            var entity = await FindByIdAsync(id);
-
-            if (entity == null)
-            {
-                throw new InvalidOperationException("Entity not found or user not authorized to delete.");
-            }
-
+            var dto = await FindByIdAsync(id) ?? throw new InvalidOperationException("Entity not found or user not authorized to delete.");
+            var entity = _mapper.Map<TEntity>(dto);
             await _repository.RemoveAsync(entity);
         }
 
-        public async Task<PagedList<TEntity>> ListAsync(Expression<Func<TEntity, bool>> filter = null, int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedList<TDto>> ListAsync(Expression<Func<TEntity, bool>> filter = null, int pageNumber = 1, int pageSize = 10)
         {
             Expression<Func<TEntity, bool>> userFilter = e => e.OwnerId == _userContext.UserId;
 
@@ -68,7 +68,8 @@ namespace MyMoneyAI.Application.Services
             }
 
             var items = await _repository.ListAsync(userFilter, pageNumber, pageSize);
-            return new PagedList<TEntity>(items, pageNumber, pageSize);
+            var itemsDto = _mapper.Map<IEnumerable<TDto>>(items);
+            return new PagedList<TDto>(itemsDto, pageNumber, pageSize);
         }
 
         private static Expression<Func<T, bool>> CombineExpressions<T>(Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)

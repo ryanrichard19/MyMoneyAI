@@ -1,4 +1,5 @@
-﻿using MyMoneyAI.Domain.Entities;
+﻿using MyMoneyAI.Application.DTOs;
+using MyMoneyAI.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyMoneyAI.Application.Interfaces
 {
-    public interface ITransactionService : IBaseService<Transaction>
+    public interface ITransactionService : IBaseService<Transaction, TransactionDto>
     {
       
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MyMoneyAI.Application.DTOs;
 using MyMoneyAI.Application.Interfaces;
 using MyMoneyAI.Application.Services;
 using MyMoneyAI.Domain.Entities;
@@ -11,6 +12,7 @@ using MyMoneyAI.Domain.Interfaces;
 using MyMoneyAI.Infrastructure.Data;
 using MyMoneyAI.Infrastructure.Repositories;
 using System.Text;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,11 +52,13 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IUserContext, UserContext>();
 
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+
 // Register generic repository
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 // Register base service
-builder.Services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
+builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
