@@ -57,8 +57,17 @@ namespace MyMoneyAI.API.Controllers
                 return Unauthorized("Invalid username or password.");
             }
 
-            var token = _tokenService.GenerateToken(user);
+            var token = await _tokenService.GenerateToken(user);
             return Ok(new LoginResponseDto { UserId = user.Id, UserName = user.UserName, Token = token });
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult GetAllUsers()
+        {
+            return Ok("Authentication GetAllUsers with Adminworks!");
+        }
+
+
     }
 }
