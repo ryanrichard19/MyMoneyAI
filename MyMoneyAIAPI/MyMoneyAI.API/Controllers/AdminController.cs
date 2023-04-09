@@ -31,6 +31,13 @@ namespace MyMoneyAI.API.Controllers
             return Ok(users);
         }
 
+        [HttpGet("usersinrole")]
+        public async Task<IActionResult> GetUsersInRoles (string roleName)
+        {
+            var role = await _userManager.GetUsersInRoleAsync(roleName);
+            return Ok(role);
+        }
+
         [HttpPost("users")]
         public async Task<IActionResult> CreateUser(User user)
         {
@@ -122,12 +129,13 @@ namespace MyMoneyAI.API.Controllers
         }
 
         [HttpPost("roles")]
-        public async Task<IActionResult> CreateRole(IdentityRole role)
+        public async Task<IActionResult> CreateRole(string name)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            var role = new IdentityRole(name);
 
             var result = await _roleManager.CreateAsync(role);
 
