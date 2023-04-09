@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using MyMoneyAI.API.Controllers;
 using MyMoneyAI.Application.DTOs;
 using MyMoneyAI.Application.Interfaces;
 using MyMoneyAI.Domain.Entities;
 using MyMoneyAI.Domain.Interfaces;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +20,14 @@ namespace MyMoneyAI.Tests.Controllers
         private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly Mock<ITokenService> _tokenServiceMock;
         private readonly UserController _controller;
+        private readonly Mock<ILogger<UserController>> _loggerMock;
 
         public UserControllerTests()
         {
             _userRepositoryMock = new Mock<IUserRepository>();
             _tokenServiceMock = new Mock<ITokenService>();
-            _controller = new UserController(_userRepositoryMock.Object, _tokenServiceMock.Object);
+            _loggerMock = new Mock<ILogger<UserController>>();
+            _controller = new UserController(_userRepositoryMock.Object, _tokenServiceMock.Object, _loggerMock.Object);
         }
 
         [Fact]
@@ -71,7 +75,7 @@ namespace MyMoneyAI.Tests.Controllers
                               .ReturnsAsync(user);
             _userRepositoryMock.Setup(x => x.CheckPasswordAsync(user, loginUserDto.Password))
                               .ReturnsAsync(true);
-            _tokenServiceMock.Setup(x => x.GenerateToken(user)).Returns(token);
+            _tokenServiceMock.Setup(x => x.GenerateToken(user)).Returns(Task.FromResult(token));
 
             // Act
             var result = await _controller.Login(loginUserDto);

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using Moq;
 using MyMoneyAI.Application.Services;
 using MyMoneyAI.Domain.Entities;
 using System;
@@ -13,18 +15,24 @@ namespace MyMoneyAI.Tests.Services
     public class TokenServiceTests
     {
         [Fact]
-        public void GenerateToken_ShouldReturnValidToken()
+        public async Task GenerateToken_ShouldReturnValidToken()
         {
             // Arrange
             var jwtSettings = new JwtSettings { Secret = "aVeryLongSecretKeyForTesting", ExpirationInMinutes = 60 };
-            var tokenService = new TokenService(Options.Create(jwtSettings));
+
+            var userStoreMock = new Mock<IUserStore<User>>();
+            var userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
+
+            var tokenService = new TokenService(Options.Create(jwtSettings), userManagerMock.Object);
+
             var user = new User { Id = "1", UserName = "testuser" };
 
             // Act
-            var token = tokenService.GenerateToken(user);
+            var token = await tokenService.GenerateToken(user);
 
             // Assert
             Assert.NotNull(token);
+
             var jwtToken = tokenService.ValidateToken(token);
             Assert.NotNull(jwtToken);
 
@@ -42,7 +50,11 @@ namespace MyMoneyAI.Tests.Services
         {
             // Arrange
             var jwtSettings = new JwtSettings { Secret = "aVeryLongSecretKeyForTesting", ExpirationInMinutes = 60 };
-            var tokenService = new TokenService(Options.Create(jwtSettings));
+
+            var userStoreMock = new Mock<IUserStore<User>>();
+            var userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
+
+            var tokenService = new TokenService(Options.Create(jwtSettings), userManagerMock.Object);
             var invalidToken = "invalid.token.string";
 
             // Act

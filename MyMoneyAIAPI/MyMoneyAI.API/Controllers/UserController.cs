@@ -18,17 +18,20 @@ namespace MyMoneyAI.API.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserRepository userRepository, ITokenService tokenService)
+        public UserController(IUserRepository userRepository, ITokenService tokenService, ILogger<UserController> logger)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
+            _logger = logger;
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("test")]
         public IActionResult Test()
         {
+            _logger.LogInformation("Get method called");
             return Ok("Authentication works!");
         }
        
@@ -57,8 +60,17 @@ namespace MyMoneyAI.API.Controllers
                 return Unauthorized("Invalid username or password.");
             }
 
-            var token = _tokenService.GenerateToken(user);
+            var token = await _tokenService.GenerateToken(user);
             return Ok(new LoginResponseDto { UserId = user.Id, UserName = user.UserName, Token = token });
         }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+        [HttpGet]
+        public IActionResult GetAllUsers()
+        {
+            return Ok("Authentication GetAllUsers with Adminworks!");
+        }
+
+
     }
 }

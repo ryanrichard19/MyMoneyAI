@@ -12,11 +12,21 @@ using MyMoneyAI.Domain.Interfaces;
 using MyMoneyAI.Infrastructure.Data;
 using MyMoneyAI.Infrastructure.Repositories;
 using System.Text;
-using AutoMapper;
+using Serilog;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
+
+builder.Host.UseSerilog(Log.Logger);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -91,6 +101,15 @@ builder.Services
         };
     });
 
+    //builder.Services.AddAuthorization(options =>
+    //{
+    //    options.AddPolicy("AdminOnly", policy =>
+    //    {
+    //        policy.RequireRole("Admin");
+    //    });
+    //});
+
+
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -102,11 +121,8 @@ builder.Services.AddLogging(logging => logging.AddConsole());
 
 var app = builder.Build();
 
-var serviceProvider = builder.Services.BuildServiceProvider();
 
-var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
-logger.LogInformation("Configuring the request pipeline...");
-
+app.UseSerilogRequestLogging();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
