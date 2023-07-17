@@ -12,5 +12,13 @@ namespace MyMoneyAI.Application.DTOs
         public decimal Amount { get; init; }
         public DateTime Date { get; init; }
         public int AccountId { get; init; }
+   }
+
+    public record TEstDto : BaseDto
+    {
+        public string Description { get; init; }
+        public decimal Amount { get; init; }
+        public DateTime Date { get; init; }
+        public int AccountId { get; init; }
     }
 }
